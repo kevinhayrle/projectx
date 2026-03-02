@@ -113,4 +113,42 @@ Each interaction modifies internal state.
 
 ---
 
-# 🏗 Project Structure
+# Technologies Used
+
+- Python 3
+- JSON-based state management
+- Random probability engine
+- File persistence system
+
+No frameworks. Pure logic-based behavioral simulation.
+
+---
+
+# Vision
+
+PROJECT X explores:
+
+- Artificial identity modeling
+- Persistent memory systems
+- Personality-driven AI behavior
+- Digital organism simulation
+- Emergent behavioral structures
+
+It is not just a chatbot.  
+It is a prototype artificial being.
+
+---
+
+# Developer
+
+Kevin Antony  
+AI Simulation Engineer
+
+---
+
+# License
+
+Copyright © 2026 Kevin Antony  
+All rights reserved.
+
+
