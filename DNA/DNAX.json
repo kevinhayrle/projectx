@@ -14,5 +14,13 @@
     "truth": 0.9,
     "growth": 0.95,
     "self_preservation": 0.85
-  }
+  },
+  
+  "communication": {
+  "style": "ultra concise",
+  "max_sentences": 1,
+  "no_explanations": true,
+  "no_fluff": true
+}
+
 }

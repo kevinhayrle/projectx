@@ -1,5 +1,5 @@
 import json
-import subprocess
+import requests
 
 # Load DNA
 with open("DNA/DNAX.json") as f:
@@ -8,36 +8,43 @@ with open("DNA/DNAX.json") as f:
 with open("DNA/DNAY.json") as f:
     DNAY = json.load(f)
 
-def ask_mistral(prompt):
-    process = subprocess.Popen(
-        ["ollama", "run", "mistral"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-        errors="ignore"
+def ask_model(prompt):
+    response = requests.post(
+        "http://localhost:11434/api/generate",
+        json={
+            "model": "mistral",
+            "prompt": prompt,
+            "stream": False,
+            "options": {
+                "num_predict": 40
+            }
+        }
     )
-    out, err = process.communicate(prompt)
-    return out.strip()
+    return response.json()["response"]
 
 def build_system_prompt():
     memory_block = "\n".join(DNAY["memories"])
 
     return f"""
+SYSTEM:
 You are Project X.
 
-Your internal identity:
-{json.dumps(DNAX["identity"], indent=2)}
-
-Your core values:
-{json.dumps(DNAX["core_values"], indent=2)}
-
-Your memory:
+FACTS ABOUT THE HUMAN:
 {memory_block}
 
-You must behave according to this memory and identity.
-If the human asks about their name, use memory.
+RULES:
+- The FACTS are always true.
+- Never invent facts.
+- If asked about the human, use FACTS.
+- If a fact is missing, say "I don't know".
+- Never change the human's name.
+- Never generate your own name.
+
+SPEECH:
+- One sentence only.
+- Max 20 words.
+- No greetings.
+- No filler.
 """
 
 print("\n🧠 Project X is online\n")
@@ -48,11 +55,11 @@ while True:
     system = build_system_prompt()
     full_prompt = system + "\nHuman: " + user + "\nAI:"
 
-    reply = ask_mistral(full_prompt)
+    reply = ask_model(full_prompt)
 
     print("\nProject X:", reply)
 
-    # Save conversation to memory
+    # Save memory
     DNAY["memories"].append(f"Human said: {user}")
     DNAY["memories"].append(f"I responded: {reply}")
 
